@@ -24,9 +24,6 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = true)
-    private int value;
-
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 

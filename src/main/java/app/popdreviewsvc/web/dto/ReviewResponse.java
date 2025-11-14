@@ -1,0 +1,25 @@
+package app.popdreviewsvc.web.dto;
+
+import jakarta.persistence.Column;
+import lombok.Builder;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Data
+@Builder
+public class ReviewResponse {
+
+    private UUID userId;
+
+    private UUID movieId;
+
+    private String title;
+
+    private String content;
+
+    private LocalDateTime createdOn;
+
+    private LocalDateTime updatedOn;
+}
