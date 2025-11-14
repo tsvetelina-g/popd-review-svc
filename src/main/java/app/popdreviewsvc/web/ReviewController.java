@@ -8,10 +8,9 @@ import app.popdreviewsvc.web.mapper.DtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/api/v1")
@@ -33,4 +32,17 @@ public class ReviewController {
                 .body(DtoMapper.from(review));
     }
 
+    @GetMapping("reviews/{userId}/{movieId}")
+    public ResponseEntity<ReviewResponse> getReviewByUserAndMovie(@PathVariable UUID userId, @PathVariable UUID movieId) {
+
+        Review review = reviewService.findReviewByUserAndMovie(userId, movieId);
+
+        if (review == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(DtoMapper.from(review));
+    }
 }
