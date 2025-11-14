@@ -46,8 +46,19 @@ public class ReviewService {
     }
 
     public Review findReviewByUserAndMovie(UUID userId, UUID movieId) {
-        Optional<Review> ratingOpt = reviewRepository.findByUserIdAndMovieId(userId, movieId);
+        Optional<Review> reviewOpt = reviewRepository.findByUserIdAndMovieId(userId, movieId);
 
-        return ratingOpt.orElse(null);
+        return reviewOpt.orElse(null);
+    }
+
+    public Boolean removeReview(UUID userId, UUID movieId) {
+        Optional<Review> reviewOpt = reviewRepository.findByUserIdAndMovieId(userId, movieId);
+
+        if (reviewOpt.isPresent()) {
+            reviewRepository.delete(reviewOpt.get());
+            return true;
+        }
+
+        return false;
     }
 }

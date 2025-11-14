@@ -45,4 +45,16 @@ public class ReviewController {
                 .status(HttpStatus.OK)
                 .body(DtoMapper.from(review));
     }
+
+    @DeleteMapping("/reviews/{userId}/{movieId}")
+    public ResponseEntity<Void> deleteReview(@PathVariable UUID userId, @PathVariable UUID movieId) {
+
+        Boolean isDeleted = reviewService.removeReview(userId, movieId);
+
+        if (!isDeleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 }
