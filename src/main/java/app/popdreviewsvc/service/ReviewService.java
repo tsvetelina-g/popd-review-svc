@@ -3,9 +3,14 @@ package app.popdreviewsvc.service;
 import app.popdreviewsvc.model.Review;
 import app.popdreviewsvc.repository.ReviewRepository;
 import app.popdreviewsvc.web.dto.ReviewRequest;
+import app.popdreviewsvc.web.dto.ReviewResponse;
+import app.popdreviewsvc.web.mapper.DtoMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +32,7 @@ public class ReviewService {
             Review review = reviewOpt.get();
 
             review.setContent(reviewRequest.getContent());
+            review.setRating(reviewRequest.getRating());
             review.setTitle(reviewRequest.getTitle());
             review.setUpdatedOn(LocalDateTime.now());
 
@@ -36,6 +42,7 @@ public class ReviewService {
         Review review = Review.builder()
                 .userId(reviewRequest.getUserId())
                 .movieId(reviewRequest.getMovieId())
+                .rating(reviewRequest.getRating())
                 .content(reviewRequest.getContent())
                 .title(reviewRequest.getTitle())
                 .createdOn(LocalDateTime.now())
@@ -61,4 +68,15 @@ public class ReviewService {
 
         return false;
     }
+
+    public List<ReviewResponse> getLatestFiveReviews(UUID movieId) {
+        return reviewRepository.findAllByMovieIdOrderByUpdatedOnDesc(movieId).stream().limit(5).toList();
+    }
+
+    public Page<ReviewResponse> getReviewsForMovie(UUID movieId, Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findByMovieIdOrderByUpdatedOnDesc(movieId, pageable);
+
+        return reviews.map(DtoMapper::from);
+    }
+
 }

@@ -15,6 +15,8 @@ public class ReviewResponse {
 
     private UUID movieId;
 
+    private Integer rating;
+
     private String title;
 
     private String content;
