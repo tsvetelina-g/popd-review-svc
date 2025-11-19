@@ -1,6 +1,7 @@
 package app.popdreviewsvc.web.mapper;
 
 import app.popdreviewsvc.model.Review;
+import app.popdreviewsvc.web.dto.MovieReviewStatsResponse;
 import app.popdreviewsvc.web.dto.ReviewResponse;
 import lombok.experimental.UtilityClass;
 
@@ -18,6 +19,11 @@ public class DtoMapper {
                 .createdOn(review.getCreatedOn())
                 .updatedOn(review.getUpdatedOn())
                 .build();
+    }
+
+    public static MovieReviewStatsResponse from(Integer movieReviewsCount) {
+
+        return MovieReviewStatsResponse.builder().totalReviews(movieReviewsCount).build();
     }
 
 

@@ -79,4 +79,14 @@ public class ReviewService {
         return reviews.map(DtoMapper::from);
     }
 
+    public Integer getAllReviewsForAMovieCount(UUID movieId) {
+
+        List<Review> reviews = reviewRepository.findAllByMovieId(movieId);
+
+        if (reviews.isEmpty()) {
+            return null;
+        }
+
+        return reviews.size();
+    }
 }

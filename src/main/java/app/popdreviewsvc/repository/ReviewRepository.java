@@ -18,4 +18,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<ReviewResponse> findAllByMovieIdOrderByUpdatedOnDesc(UUID movieId);
 
     Page<Review> findByMovieIdOrderByUpdatedOnDesc(UUID movieId, Pageable pageable);
+
+    List<Review> findAllByMovieId(UUID movieId);
 }

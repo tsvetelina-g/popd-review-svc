@@ -2,6 +2,7 @@ package app.popdreviewsvc.web;
 
 import app.popdreviewsvc.model.Review;
 import app.popdreviewsvc.service.ReviewService;
+import app.popdreviewsvc.web.dto.MovieReviewStatsResponse;
 import app.popdreviewsvc.web.dto.ReviewRequest;
 import app.popdreviewsvc.web.dto.ReviewResponse;
 import app.popdreviewsvc.web.mapper.DtoMapper;
@@ -84,5 +85,14 @@ public class ReviewController {
         );
     }
 
+    @GetMapping("/reviews/{movieId}/stats")
+    public ResponseEntity<MovieReviewStatsResponse> movieReviewsStats(@PathVariable UUID movieId) {
+
+        Integer allRatingsCount = reviewService.getAllReviewsForAMovieCount(movieId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(DtoMapper.from(allRatingsCount));
+    }
     
 }
