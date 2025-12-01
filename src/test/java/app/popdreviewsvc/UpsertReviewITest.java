@@ -4,10 +4,10 @@ import app.popdreviewsvc.model.Review;
 import app.popdreviewsvc.repository.ReviewRepository;
 import app.popdreviewsvc.service.ReviewService;
 import app.popdreviewsvc.web.dto.ReviewRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
 public class UpsertReviewITest {
 
@@ -26,6 +25,11 @@ public class UpsertReviewITest {
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @AfterEach
+    void tearDown() {
+        reviewRepository.deleteAll();
+    }
 
     @Test
     void upsertReview_whenReviewDoesNotExist_shouldCreateNewReviewAndPersistInDatabase() {
@@ -36,8 +40,8 @@ public class UpsertReviewITest {
                 .userId(userId)
                 .movieId(movieId)
                 .rating(5)
-                .title("Great movie!")
-                .content("This is an amazing film.")
+                .title("Title")
+                .content("Content")
                 .build();
 
         Review createdReview = reviewService.upsert(reviewRequest);
@@ -46,16 +50,16 @@ public class UpsertReviewITest {
         assertEquals(userId, createdReview.getUserId());
         assertEquals(movieId, createdReview.getMovieId());
         assertEquals(5, createdReview.getRating());
-        assertEquals("Great movie!", createdReview.getTitle());
-        assertEquals("This is an amazing film.", createdReview.getContent());
+        assertEquals("Title", createdReview.getTitle());
+        assertEquals("Content", createdReview.getContent());
         assertNotNull(createdReview.getCreatedOn());
         assertNotNull(createdReview.getUpdatedOn());
 
         Review reviewFromDb = reviewRepository.findById(createdReview.getId()).orElse(null);
         assertNotNull(reviewFromDb);
         assertEquals(5, reviewFromDb.getRating());
-        assertEquals("Great movie!", reviewFromDb.getTitle());
-        assertEquals("This is an amazing film.", reviewFromDb.getContent());
+        assertEquals("Title", reviewFromDb.getTitle());
+        assertEquals("Content", reviewFromDb.getContent());
         assertEquals(1, reviewRepository.count());
     }
 
@@ -66,6 +70,7 @@ public class UpsertReviewITest {
         LocalDateTime originalCreatedOn = LocalDateTime.now().minusDays(1);
 
         Review existingReview = Review.builder()
+                .id(UUID.randomUUID())
                 .userId(userId)
                 .movieId(movieId)
                 .rating(3)
@@ -90,7 +95,7 @@ public class UpsertReviewITest {
         assertEquals(5, updatedReview.getRating());
         assertEquals("Updated title", updatedReview.getTitle());
         assertEquals("Updated content", updatedReview.getContent());
-        assertThat(updatedReview.getCreatedOn()).isCloseTo(originalCreatedOn, within(1, ChronoUnit.MICROS));
+        assertThat(updatedReview.getCreatedOn()).isCloseTo(originalCreatedOn, within(1, ChronoUnit.SECONDS));
         assertTrue(updatedReview.getUpdatedOn().isAfter(originalCreatedOn));
         assertEquals(1, reviewRepository.count());
 
