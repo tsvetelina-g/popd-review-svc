@@ -2,7 +2,7 @@ package app.popdreviewsvc.repository;
 
 import app.popdreviewsvc.model.Review;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
 
@@ -11,8 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, UUID> {
-
+public interface ReviewRepository extends MongoRepository<Review, UUID> {
     Optional<Review> findByUserIdAndMovieId(UUID userId, UUID movieId);
 
     List<Review> findAllByMovieIdOrderByUpdatedOnDesc(UUID movieId);

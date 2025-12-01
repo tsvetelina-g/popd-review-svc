@@ -1,47 +1,35 @@
 package app.popdreviewsvc.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(
-        name = "reviews",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "movie_id"})
-)
+@Document("reviews")
+@CompoundIndex(def = "{'userId':1, 'movieId':1}", unique = true)
 public class Review {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = true)
     private Integer rating;
 
-    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(name = "movie_id", nullable = false)
     private UUID movieId;
 
-    @Column(nullable = true)
     private String title;
 
-    @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
     private LocalDateTime createdOn;
 
-    @Column(nullable = false)
     private LocalDateTime updatedOn;
 }

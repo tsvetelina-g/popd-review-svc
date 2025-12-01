@@ -44,6 +44,7 @@ public class ReviewService {
         }
 
         Review review = Review.builder()
+                .id(UUID.randomUUID())
                 .userId(reviewRequest.getUserId())
                 .movieId(reviewRequest.getMovieId())
                 .rating(reviewRequest.getRating())
