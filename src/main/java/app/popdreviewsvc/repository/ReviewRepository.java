@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface ReviewRepository extends MongoRepository<Review, UUID> {
+
     Optional<Review> findByUserIdAndMovieId(UUID userId, UUID movieId);
 
     List<Review> findAllByMovieIdOrderByUpdatedOnDesc(UUID movieId);

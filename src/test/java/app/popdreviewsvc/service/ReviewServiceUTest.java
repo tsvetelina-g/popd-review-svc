@@ -163,7 +163,7 @@ public class ReviewServiceUTest {
     }
 
     @Test
-    void whenGetLatestFiveReviews_andReviewsExist_thenReturnLatestFive() {
+    void whenGetLatestReviews_andReviewsExist_thenReturnLatest() {
         UUID movieId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
         List<Review> reviews = List.of(
@@ -173,22 +173,22 @@ public class ReviewServiceUTest {
         );
         when(reviewRepository.findAllByMovieIdOrderByUpdatedOnDesc(movieId)).thenReturn(reviews);
 
-        List<ReviewResponse> result = reviewService.getLatestFiveReviews(movieId);
+        List<ReviewResponse> result = reviewService.getLatestReviews(movieId, 3);
 
         assertNotNull(result);
         assertEquals(3, result.size());
     }
 
     @Test
-    void whenGetLatestFiveReviews_andNoReviewsExist_thenThrowException() {
+    void whenGetLatestReviews_andNoReviewsExist_thenThrowException() {
         UUID movieId = UUID.randomUUID();
         when(reviewRepository.findAllByMovieIdOrderByUpdatedOnDesc(movieId)).thenReturn(List.of());
 
-        assertThrows(NotFoundException.class, () -> reviewService.getLatestFiveReviews(movieId));
+        assertThrows(NotFoundException.class, () -> reviewService.getLatestReviews(movieId, 5));
     }
 
     @Test
-    void whenGetLatestFiveReviews_andMoreThanFiveReviewsExist_thenReturnOnlyFive() {
+    void whenGetLatestReviews_andMoreThanRequestedReviewsExist_thenReturnOnlyRequestedCount() {
         UUID movieId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
         List<Review> reviews = new java.util.ArrayList<>();
@@ -205,7 +205,7 @@ public class ReviewServiceUTest {
         }
         when(reviewRepository.findAllByMovieIdOrderByUpdatedOnDesc(movieId)).thenReturn(reviews);
 
-        List<ReviewResponse> result = reviewService.getLatestFiveReviews(movieId);
+        List<ReviewResponse> result = reviewService.getLatestReviews(movieId, 5);
 
         assertNotNull(result);
         assertEquals(5, result.size());

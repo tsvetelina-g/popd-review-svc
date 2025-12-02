@@ -150,7 +150,7 @@ public class ReviewControllerApiTest {
     }
 
     @Test
-    void getLatestFiveReviewsForAMovie_shouldReturn200OkAndReturnListOfReviewResponses() throws Exception {
+    void getLatestReviewsForAMovie_shouldReturn200OkAndReturnListOfReviewResponses() throws Exception {
         UUID movieId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
         List<ReviewResponse> responses = List.of(
@@ -173,7 +173,7 @@ public class ReviewControllerApiTest {
                         .updatedOn(now)
                         .build()
         );
-        when(reviewService.getLatestFiveReviews(movieId)).thenReturn(responses);
+        when(reviewService.getLatestReviews(movieId, 5)).thenReturn(responses);
 
         MockHttpServletRequestBuilder httpRequest = get("/api/v1/reviews/{movieId}", movieId);
 
@@ -183,13 +183,13 @@ public class ReviewControllerApiTest {
                 .andExpect(jsonPath("$[0].rating").value(5))
                 .andExpect(jsonPath("$[1].rating").value(4));
 
-        verify(reviewService).getLatestFiveReviews(movieId);
+        verify(reviewService).getLatestReviews(movieId, 5);
     }
 
     @Test
-    void getLatestFiveReviewsForAMovie_whenNoReviewsFound_shouldReturn404NotFound() throws Exception {
+    void getLatestReviewsForAMovie_whenNoReviewsFound_shouldReturn404NotFound() throws Exception {
         UUID movieId = UUID.randomUUID();
-        when(reviewService.getLatestFiveReviews(movieId))
+        when(reviewService.getLatestReviews(movieId, 5))
                 .thenThrow(new NotFoundException("No reviews found"));
 
         MockHttpServletRequestBuilder httpRequest = get("/api/v1/reviews/{movieId}", movieId);
@@ -197,7 +197,7 @@ public class ReviewControllerApiTest {
         mockMvc.perform(httpRequest)
                 .andExpect(status().isNotFound());
 
-        verify(reviewService).getLatestFiveReviews(movieId);
+        verify(reviewService).getLatestReviews(movieId, 5);
     }
 
     @Test

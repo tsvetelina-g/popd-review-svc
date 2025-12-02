@@ -52,8 +52,8 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/{movieId}")
-    public ResponseEntity<List<ReviewResponse>> getLatestFiveReviewsForAMovie(@PathVariable UUID movieId) {
-        List<ReviewResponse> latestFiveReviews = reviewService.getLatestFiveReviews(movieId);
+    public ResponseEntity<List<ReviewResponse>> getLatestReviewsForAMovie(@PathVariable UUID movieId) {
+        List<ReviewResponse> latestFiveReviews = reviewService.getLatestReviews(movieId, 5);
 
         return ResponseEntity.ok(latestFiveReviews);
     }

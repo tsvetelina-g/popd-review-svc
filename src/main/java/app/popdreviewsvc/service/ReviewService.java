@@ -71,14 +71,14 @@ public class ReviewService {
                 review.getId(), userId, movieId);
     }
 
-    public List<ReviewResponse> getLatestFiveReviews(UUID movieId) {
+    public List<ReviewResponse> getLatestReviews(UUID movieId, int count) {
         List<Review> reviews = reviewRepository.findAllByMovieIdOrderByUpdatedOnDesc(movieId);
 
         if (reviews.isEmpty()) {
             throw new NotFoundException("Latest Reviews not found for movie with id [%s]".formatted(movieId));
         }
 
-        return reviews.stream().map(DtoMapper::from).limit(5).toList();
+        return reviews.stream().map(DtoMapper::from).limit(count).toList();
     }
 
     public Page<ReviewResponse> getReviewsForMovie(UUID movieId, Pageable pageable) {
